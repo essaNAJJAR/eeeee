@@ -1,0 +1,134 @@
+{
+  "project": {
+    "name": "PyNILM_System",
+    "version": "3.0.0",
+    "description": "FVMD-VAE-DCCNN-Att + Hybrid FL NILM Simulation (Python)"
+  },
+  "data": {
+    "dataset": "UK-DALE",
+    "homeID": 1,
+    "samplingRate": 0.1667,
+    "windowSize": 256,
+    "overlap": 128,
+    "trainRatio": 0.8,
+    "duration": 86400,
+    "path": "Data/UK-DALE",
+    "supportedDatasets": ["UK-DALE", "REFIT"]
+  },
+  "preprocessing": {
+    "outlierRemoval": {
+      "method": "zscore",
+      "threshold": 3
+    },
+    "smoothing": {
+      "method": "savitzkyGolay",
+      "frameLength": 11,
+      "polyOrder": 3
+    },
+    "normalization": {
+      "method": "minmax",
+      "range": [0, 1]
+    }
+  },
+  "featureExtraction": {
+    "vmd": {
+      "KRange": [3, 9],
+      "alpha": 2000,
+      "tau": 0,
+      "tolerance": 1e-7,
+      "maxIter": 500,
+      "feedbackEnabled": true
+    },
+    "teo": {
+      "enabled": true,
+      "applyToModes": true
+    },
+    "featureTypes": ["time", "frequency", "teo", "crossmode"]
+  },
+  "fuzzyLogic": {
+    "enabled": true,
+    "numRules": 81,
+    "inputs": ["DeltaP", "Sigma", "Duration", "Frequency"],
+    "output": "State",
+    "states": ["OFF", "PARTIAL", "ON"],
+    "defuzzification": "centroid"
+  },
+  "deepLearning": {
+    "modelType": "VAE_DCCNN_Att",
+    "inputChannels": 1,
+    "numClasses": 5,
+    "latentDim": 32,
+    "encoderChannels": [64, 128, 256],
+    "decoderChannels": [256, 128, 64],
+    "attention": {
+      "heads": 8,
+      "dim": 64
+    },
+    "training": {
+      "epochs": 100,
+      "batchSize": 32,
+      "learningRate": 0.001,
+      "weightDecay": 1e-5,
+      "vaeBeta": 0.5
+    },
+    "inference": {
+      "useONNX": false,
+      "onnxPath": "DeepLearning/model.onnx",
+      "gpuEnabled": false
+    }
+  },
+  "federatedLearning": {
+    "enabled": true,
+    "numClients": 20,
+    "numRounds": 50,
+    "localEpochs": 5,
+    "learningRate": 0.01,
+    "aggregation": "multiKrum",
+    "byzantineFraction": 0.1,
+    "gat": {
+      "enabled": true,
+      "threshold": 0.5,
+      "heads": 4,
+      "hiddenDim": 64
+    }
+  },
+  "eventDetection": {
+    "enabled": true,
+    "threshold": 0.1,
+    "minGap": 3,
+    "classifyEvents": true
+  },
+  "evaluation": {
+    "metrics": ["accuracy", "f1", "precision", "recall", "mae", "rmse", "mape"],
+    "perAppliance": true,
+    "eventBased": true,
+    "confusionMatrix": true,
+    "reconstruction": true
+  },
+  "visualization": {
+    "dashboard": true,
+    "realTime": true,
+    "exportFormats": ["png", "pdf", "eps"],
+    "savePath": "Results"
+  },
+  "streaming": {
+    "enabled": false,
+    "bufferSize": 1024,
+    "updateRate": 10
+  },
+  "gpu": {
+    "enabled": false,
+    "device": "auto",
+    "memoryLimit": 4096
+  },
+  "export": {
+    "reports": true,
+    "formats": ["latex", "csv", "json"],
+    "outputPath": "Export"
+  },
+  "api": {
+    "enabled": false,
+    "port": 8080,
+    "host": "localhost"
+  }
+}

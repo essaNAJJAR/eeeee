@@ -1,0 +1,42 @@
+{
+  "num_households": 5,
+  "grid_level": {
+    "total_mean": 12552.857349800628,
+    "total_max": 19077.60336256678,
+    "total_std": 3641.007055253384,
+    "num_households": 5
+  },
+  "demand_response": {
+    "hourly_load": [
+      12552.857349800628,
+      NaN,
+      NaN,
+      NaN,
+      NaN,
+      NaN,
+      NaN,
+      NaN,
+      NaN,
+      NaN,
+      NaN,
+      NaN,
+      NaN,
+      NaN,
+      NaN,
+      NaN,
+      NaN,
+      NaN,
+      NaN,
+      NaN,
+      NaN,
+      NaN,
+      NaN,
+      NaN
+    ],
+    "peak_hour": 1,
+    "off_peak_hour": 1,
+    "peak_load": NaN,
+    "off_peak_load": NaN,
+    "peak_off_peak_ratio": NaN
+  }
+}
